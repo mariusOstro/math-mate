@@ -1,0 +1,20 @@
+{
+  "name": "mathmate-lokal-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lokal norsk MathMate-prototype med Excel-oppgaver og AI-veileder.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node --watch server.mjs",
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "5.11.2",
+    "fflate": "0.8.2",
+    "katex": "0.16.24",
+    "markdown-it": "14.3.0"
+  },
+  "devDependencies": { "jsdom": "26.1.0" }
+}
