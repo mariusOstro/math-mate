@@ -1,26 +1,56 @@
 <!doctype html>
 <html lang="nb">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <meta name="description" content="Øv på matematikk i ditt eget tempo, med oppgaver, løsningsforslag og en norsk AI-veileder.">
-    <title>MathMate – øv på matematikk</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/vendor/katex/katex.min.css">
-    <link rel="stylesheet" href="/styles.css">
-    <script src="/vendor/markdown-it.js" defer></script>
-    <script src="/vendor/katex/katex.min.js" defer></script>
-    <script type="module" src="/app.js"></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Hopp til innholdet</a>
-    <header class="site-header">
-      <button class="brand" id="home-button" aria-label="MathMate – til start"><img src="/logo.svg" alt="MathMate" width="171" height="60"></button>
-      <div class="header-actions"><span class="prototype-label"><span class="status-dot"></span> Lokal prototype</span><button id="theme-button" class="icon-button" aria-label="Bytt til mørkt tema" title="Bytt fargetema"></button></div>
-    </header>
-    <main id="main" tabindex="-1"><div class="loading-screen" role="status">Henter oppgavene dine …</div></main>
-    <footer class="site-footer"><span>Matematikk, ett steg om gangen.</span><span>MathMate · Norsk prototype</span></footer>
-    <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
+        <meta
+            name="description"
+            content="Øv på matematikk i ditt eget tempo, med oppgaver, løsningsforslag og en norsk AI-veileder."
+        />
+        <title>MathMate – øv på matematikk</title>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+        <link rel="stylesheet" href="/styles.css" />
+        <script src="/vendor/markdown-it.js" defer></script>
+        <script src="/vendor/katex/katex.min.js" defer></script>
+        <script type="module" src="/app.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Hopp til innholdet</a>
+        <header class="site-header">
+            <button
+                class="brand"
+                id="home-button"
+                aria-label="MathMate – til start"
+            >
+                <img src="/logo.svg" alt="MathMate" width="171" height="60" />
+            </button>
+            <div class="header-actions">
+                <span class="prototype-label"
+                    ><span class="status-dot"></span> Lokal prototype</span
+                ><button
+                    id="theme-button"
+                    class="icon-button"
+                    aria-label="Bytt til mørkt tema"
+                    title="Bytt fargetema"
+                ></button>
+            </div>
+        </header>
+        <main id="main" tabindex="-1">
+            <div class="loading-screen" role="status">
+                Henter oppgavene dine …
+            </div>
+        </main>
+        <footer class="site-footer">
+            <span>Matematikk, ett steg om gangen.</span
+            ><span>MathMate · Norsk prototype</span>
+        </footer>
+        <div
+            class="sr-only"
+            id="announcement"
+            role="status"
+            aria-live="polite"
+        ></div>
+    </body>
 </html>
