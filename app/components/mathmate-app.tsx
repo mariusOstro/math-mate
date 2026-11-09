@@ -29,6 +29,18 @@ export function MathMateApp() {
           />
         </button>
         <div className="header-actions">
+          {state.bootstrap?.userNumber && (
+            <a
+              className="user-number"
+              href="/om-lagring"
+              aria-label={`Ditt brukernummer er ${state.bootstrap.userNumber}. Les om lagring og sletting av data.`}
+              title="Oppgi dette nummeret når du kontakter oss om sletting av data"
+            >
+              <span className="user-number-label">Brukernummer</span>
+              <span className="user-number-short">Bruker</span>
+              <strong>{state.bootstrap.userNumber}</strong>
+            </a>
+          )}
           <span className="prototype-label" role="status">
             <span className="status-dot" />
             {state.sync.pending ? 'Lagrer …' : 'Din matematikkøkt'}

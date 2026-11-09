@@ -11,6 +11,7 @@ import type {
 export interface IPracticeRepository {
   profileExists(userId: string): Promise<boolean>;
   registerProfile(candidateId: string): Promise<string>;
+  profileNumber(userId: string): Promise<number>;
   levels(): Promise<Level[]>;
   problems(
     level: string,

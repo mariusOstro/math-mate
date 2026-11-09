@@ -57,7 +57,7 @@ npm run db:import -- --dry-run
 npm run db:import
 ```
 
-All four migrations have been applied and all **1,550 questions** have been imported into the configured project during this rewrite. On this machine, use `npm run db:check` to inspect connectivity instead of repeating setup.
+The rewrite's schema migrations have been applied and all **1,550 questions** have been imported into the configured project. Additional schema changes are delivered as new files in `supabase/migrations/`. On this machine, use `npm run db:check` to inspect connectivity instead of repeating setup.
 
 The import reads the root `Matematikk_tekstoppgaver_1550.xlsx`, validates every row before writing, and imports all 14 school levels/subjects. You can choose a different workbook with `npm run db:import -- --file path/to/file.xlsx`.
 
@@ -97,6 +97,10 @@ The dependency direction follows the earlier application's layered design: contr
 ## Identity and logging
 
 There is no account creation or login. A random browser UUID is saved in `localStorage`; the current tab's session and attempt identifiers use `sessionStorage`. A signed HttpOnly cookie binds requests to that browser profile, so knowing a public UUID alone does not let someone access another profile's attempts or chat. If local data and the binding cookie are lost, a new profile is created. A shared browser profile can still represent more than one person.
+
+Each profile also has a visible **support number** (`app_users.user_number`), starting at **1010** and increasing automatically. The header and `/om-lagring` show the current browser's number. The database backfills existing profiles in creation order and keeps UUID relationships unchanged. Support numbers stay fixed across sessions and are never recycled after deletion. PostgreSQL sequences can leave gaps after rolled-back inserts or deleted test profiles. The four-digit range ends at 9999 (8,990 possible assigned numbers); allocation fails instead of reusing someone else's number.
+
+To locate a deletion request, use `app_users.user_number` or `user_stats.user_number` with administrator access. The number is a reference, not proof of identity. See the Supabase guide's deletion instructions. The application does not expose a public number-to-profile lookup or deletion endpoint.
 
 The server is the only application component that accesses Supabase. The tables and RPCs are closed to `anon` and `authenticated`; the server key uses `service_role`. Every private operation verifies the browser's ownership of the session/attempt/thread.
 

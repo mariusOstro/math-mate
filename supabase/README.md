@@ -35,17 +35,17 @@ Ikke bruk `db reset` med et eksternt mål for å få migreringshistorikken til �
 
 ## Innhold
 
-| Tabell | Formål |
-|---|---|
-| `app_users` | Stabil, pseudonym nettleser-ID som kan beholdes i localStorage |
-| `sessions` | Økter, aktivitetstidspunkt, avslutningsgrunn og appversjon |
-| `problems` | Excel-oppgaver, fasit, enhet, løsningsforslag og versjoner |
-| `solution_steps` | Nummererte steg knyttet til en bestemt oppgaveversjon |
-| `problem_attempts` | Ett arbeidsforløp med en oppgave i en økt |
-| `answer_submissions` | Hvert innsendt svar og serverens evaluering |
-| `chat_threads` | Samtaler knyttet til et oppgaveforsøk |
-| `chat_messages` | Elevmeldinger, AI-svar, feil, modell, promptversjon og tokenforbruk |
-| `events` | Handlinger, stegvis visning, fasitvisning og aktivitetspulser |
+| Tabell               | Formål                                                              |
+| -------------------- | ------------------------------------------------------------------- |
+| `app_users`          | Stabil, pseudonym nettleser-ID som kan beholdes i localStorage      |
+| `sessions`           | Økter, aktivitetstidspunkt, avslutningsgrunn og appversjon          |
+| `problems`           | Excel-oppgaver, fasit, enhet, løsningsforslag og versjoner          |
+| `solution_steps`     | Nummererte steg knyttet til en bestemt oppgaveversjon               |
+| `problem_attempts`   | Ett arbeidsforløp med en oppgave i en økt                           |
+| `answer_submissions` | Hvert innsendt svar og serverens evaluering                         |
+| `chat_threads`       | Samtaler knyttet til et oppgaveforsøk                               |
+| `chat_messages`      | Elevmeldinger, AI-svar, feil, modell, promptversjon og tokenforbruk |
+| `events`             | Handlinger, stegvis visning, fasitvisning og aktivitetspulser       |
 
 Visningene `attempt_stats`, `session_stats`, `user_stats` og `problem_stats` beregner statistikk fra grunnlagsdataene. Hjelpetabeller og sammenkoblinger aggregeres hver for seg, så mange chatmeldinger ikke mangedobler antallet innsendte svar.
 
@@ -55,16 +55,16 @@ Databasen bruker UUID-er, `timestamptz`, fremmednøkler og kontrollregler. Supab
 
 Excel-kolonnene mappes slik:
 
-| Excel | Database |
-|---|---|
-| `oppgave_id` | `source_id` |
-| `oppgavetekst` | `question` |
-| `trinn_fag` | `level_code` |
-| `vanskelighetsgrad` | `difficulty` |
-| `kategori` | `category` |
-| `fasit_verdi` | `answer_value` |
-| `fasit_enhet` | `answer_unit` |
-| `løsningsforslag` | `solution` |
+| Excel               | Database       |
+| ------------------- | -------------- |
+| `oppgave_id`        | `source_id`    |
+| `oppgavetekst`      | `question`     |
+| `trinn_fag`         | `level_code`   |
+| `vanskelighetsgrad` | `difficulty`   |
+| `kategori`          | `category`     |
+| `fasit_verdi`       | `answer_value` |
+| `fasit_enhet`       | `answer_unit`  |
+| `løsningsforslag`   | `solution`     |
 
 `answer_value` lagres som tekst for å bevare både tall og eventuelle symbolske svar. `validation_rules` er et JSON-objekt for den serverbaserte svarsjekken, for eksempel:
 
@@ -130,6 +130,36 @@ Opprett følgende **Variables**:
 Commit migreringsfilene og arbeidsflyten. Ved push til `main` som endrer `supabase/migrations/`, `supabase/config.toml` eller selve arbeidsflyten, kobler jobben til prosjektet, viser ventende migreringer og kjører `db push`. Den kan også startes fra **Actions → Deploy Supabase schema → Run workflow** etter aktivering.
 
 Endre `branches: [main]` hvis produksjonsgrenen heter noe annet. Bruk separate prosjekter for test og produksjon når du utvider oppsettet. Denne jobben deployer bare databaseskjemaet, ikke nettsiden eller miljøvariablene til applikasjonen.
+
+## Brukernummer og sletteforespørsler
+
+`app_users.user_number` er et unikt firesifret brukernummer som starter på 1010. Eksisterende profiler nummereres etter `created_at` (med UUID som stabil sekundærsortering). Nye profiler får nummer fra en databasesekvens, slik at parallelle registreringer ikke får samme nummer. Nummeret er uforanderlig og finnes også i `user_stats`.
+
+Nummeret vises i toppfeltet og på `/om-lagring` for den aktuelle nettleserprofilen. Brukeren kan oppgi det når hen kontakter deg om sletting. Oppslag og sletting utføres med administratortilgang i Supabase. Et firesifret nummer er en referanse; knytt henvendelsen til riktig nettleserprofil før du sletter.
+
+Finn først profilen, for eksempel i SQL Editor:
+
+```sql
+select user_number, id, created_at, last_seen_at
+from public.app_users
+where user_number = 1010;
+
+select * from public.user_stats where user_number = 1010;
+```
+
+Når du har kontrollert riktig profil, erstatter du eksempelnummeret med brukernummeret i henvendelsen og sletter:
+
+```sql
+begin;
+delete from public.app_users
+where user_number = 1010
+returning user_number, id;
+commit;
+```
+
+Fremmednøklene sletter tilhørende økter, oppgaveforsøk, innsendte svar, chatmeldinger og hendelser. Oppgavebanken beholdes. Nummeret gjenbrukes ikke. En ny profil som opprettes etter sletting, får et nytt brukernummer.
+
+Sekvensen bruker intervallet 1010–9999, altså 8 990 mulige tildelte numre. Sletting, avbrutte transaksjoner og tester kan gi hull i nummerserien. Sekvensen stopper ved grensen og går ikke rundt. Den skal ikke nullstilles for å fylle hull: gamle slettehenvendelser må ikke kunne peke på en annen person.
 
 ## Senere skjemaendringer
 

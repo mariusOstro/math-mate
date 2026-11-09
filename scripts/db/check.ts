@@ -62,6 +62,15 @@ async function main() {
     return;
   }
   console.log('Supabase schema accessible. Problems:', count);
+  const { error: numberError, count: profileCount } = await db
+    .from('app_users')
+    .select('user_number', { count: 'exact', head: true });
+  if (numberError) {
+    console.error('User-number migration is not accessible:', numberError.code);
+    process.exitCode = 1;
+    return;
+  }
+  console.log('User-number migration: available. Profiles:', profileCount);
   const { error: rpcError } = await db.rpc('mathmate_level_counts');
   console.log(
     'Application command migration:',

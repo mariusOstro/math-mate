@@ -32,6 +32,10 @@ try {
   & psql @taskPsqlArgs -f (Join-Path $PSScriptRoot 'bootstrap-test-roles.sql')
   if ($LASTEXITCODE -ne 0) { throw 'Failed to create the test roles.' }
   foreach ($migration in (Get-ChildItem -LiteralPath (Join-Path $taskRepoRoot 'supabase/migrations') -Filter '*.sql' | Sort-Object Name)) {
+    if ($migration.Name -eq '20261110000000_add_user_numbers.sql') {
+      & psql @taskPsqlArgs -f (Join-Path $PSScriptRoot 'prepare-user-number-backfill.sql')
+      if ($LASTEXITCODE -ne 0) { throw 'Failed to prepare user-number migration fixtures.' }
+    }
     & psql @taskPsqlArgs -f $migration.FullName
     if ($LASTEXITCODE -ne 0) { throw "Migration failed: $($migration.Name)" }
   }
