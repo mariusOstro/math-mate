@@ -35,17 +35,17 @@ Ikke bruk `db reset` med et eksternt mål for å få migreringshistorikken til �
 
 ## Innhold
 
-| Tabell | Formål |
-|---|---|
-| `app_users` | Stabil, pseudonym nettleser-ID som kan beholdes i localStorage |
-| `sessions` | Økter, aktivitetstidspunkt, avslutningsgrunn og appversjon |
-| `problems` | Excel-oppgaver, fasit, enhet, løsningsforslag og versjoner |
-| `solution_steps` | Nummererte steg knyttet til en bestemt oppgaveversjon |
-| `problem_attempts` | Ett arbeidsforløp med en oppgave i en økt |
-| `answer_submissions` | Hvert innsendt svar og serverens evaluering |
-| `chat_threads` | Samtaler knyttet til et oppgaveforsøk |
-| `chat_messages` | Elevmeldinger, AI-svar, feil, modell, promptversjon og tokenforbruk |
-| `events` | Handlinger, stegvis visning, fasitvisning og aktivitetspulser |
+| Tabell               | Formål                                                              |
+| -------------------- | ------------------------------------------------------------------- |
+| `app_users`          | Stabil, pseudonym nettleser-ID som kan beholdes i localStorage      |
+| `sessions`           | Økter, aktivitetstidspunkt, avslutningsgrunn og appversjon          |
+| `problems`           | Excel-oppgaver, fasit, enhet, løsningsforslag og versjoner          |
+| `solution_steps`     | Nummererte steg knyttet til en bestemt oppgaveversjon               |
+| `problem_attempts`   | Ett arbeidsforløp med en oppgave i en økt                           |
+| `answer_submissions` | Hvert innsendt svar og serverens evaluering                         |
+| `chat_threads`       | Samtaler knyttet til et oppgaveforsøk                               |
+| `chat_messages`      | Elevmeldinger, AI-svar, feil, modell, promptversjon og tokenforbruk |
+| `events`             | Handlinger, stegvis visning, fasitvisning og aktivitetspulser       |
 
 Visningene `attempt_stats`, `session_stats`, `user_stats` og `problem_stats` beregner statistikk fra grunnlagsdataene. Hjelpetabeller og sammenkoblinger aggregeres hver for seg, så mange chatmeldinger ikke mangedobler antallet innsendte svar.
 
@@ -55,25 +55,25 @@ Databasen bruker UUID-er, `timestamptz`, fremmednøkler og kontrollregler. Supab
 
 Excel-kolonnene mappes slik:
 
-| Excel | Database |
-|---|---|
-| `oppgave_id` | `source_id` |
-| `oppgavetekst` | `question` |
-| `trinn_fag` | `level_code` |
-| `vanskelighetsgrad` | `difficulty` |
-| `kategori` | `category` |
-| `fasit_verdi` | `answer_value` |
-| `fasit_enhet` | `answer_unit` |
-| `løsningsforslag` | `solution` |
+| Excel               | Database       |
+| ------------------- | -------------- |
+| `oppgave_id`        | `source_id`    |
+| `oppgavetekst`      | `question`     |
+| `trinn_fag`         | `level_code`   |
+| `vanskelighetsgrad` | `difficulty`   |
+| `kategori`          | `category`     |
+| `fasit_verdi`       | `answer_value` |
+| `fasit_enhet`       | `answer_unit`  |
+| `løsningsforslag`   | `solution`     |
 
 `answer_value` lagres som tekst for å bevare både tall og eventuelle symbolske svar. `validation_rules` er et JSON-objekt for den serverbaserte svarsjekken, for eksempel:
 
 ```json
 {
-  "answer_type": "numeric",
-  "decimal_places": 2,
-  "absolute_tolerance": 0.005,
-  "accepted_answers": []
+    "answer_type": "numeric",
+    "decimal_places": 2,
+    "absolute_tolerance": 0.005,
+    "accepted_answers": []
 }
 ```
 
