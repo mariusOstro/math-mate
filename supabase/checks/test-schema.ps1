@@ -35,8 +35,10 @@ try {
     & psql @taskPsqlArgs -f $migration.FullName
     if ($LASTEXITCODE -ne 0) { throw "Migration failed: $($migration.Name)" }
   }
-  & psql @taskPsqlArgs -f (Join-Path $PSScriptRoot 'schema.test.sql')
-  if ($LASTEXITCODE -ne 0) { throw 'Schema checks failed.' }
+  foreach ($check in (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.test.sql' | Sort-Object Name)) {
+    & psql @taskPsqlArgs -f $check.FullName
+    if ($LASTEXITCODE -ne 0) { throw "Schema checks failed: $($check.Name)" }
+  }
 } finally {
   [Environment]::SetEnvironmentVariable('PGPASSWORD', $taskPreviousPgPassword, 'Process')
   if ($taskClusterStarted -or (Test-Path -LiteralPath (Join-Path $taskDataPath 'postmaster.pid'))) { & pg_ctl stop -D $taskDataPath -m fast -w | Out-Null }

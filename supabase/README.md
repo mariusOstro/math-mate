@@ -1,6 +1,6 @@
 # MathMate: databaseskjema og utrulling til Supabase
 
-Migreringen i `migrations/20261109000000_create_mathmate_schema.sql` oppretter hele den nye datamodellen. Den kjøres med Supabase CLI; du trenger ikke opprette tabeller i Table Editor.
+Migreringene i `migrations/` oppretter datamodellen og de serverbaserte applikasjonskommandoene. De kjøres med Supabase CLI; du trenger ikke opprette tabeller i Table Editor. Hovedapplikasjonen bruker nå dette oppsettet. Se også [hovedveiledningen](../README.md) for oppstart og Vercel.
 
 Kjør kommandoene fra **rotmappen `math-mate`**, der denne `supabase`-mappen ligger. Ikke kjør dem fra `prototype`.
 
@@ -157,8 +157,8 @@ Testene dekker korrekte og ukorrekte svar, chatforløp, summering uten dobbeltte
 
 Dette oppsettet oppretter nye tabeller med små bokstaver. Det erstatter ikke de gamle Prisma-tabellene `User`, `Problem`, `Solves` og `Event`, og endrer ikke `prisma/schema.prisma`.
 
-Bruk Supabase-migreringene som kilde til skjemaendringer for disse nye tabellene. Ikke la Prisma Migrate og Supabase CLI administrere de samme tabellene parallelt. Velger du Prisma som spørringsklient senere, må datamodeller og applikasjonskode tilpasses det nye skjemaet.
+Bruk Supabase-migreringene som kilde til skjemaendringer for disse nye tabellene. Hovedapplikasjonen bruker Supabase-repositories og de atomiske `mathmate_*`-funksjonene. Prisma er ikke lenger en runtime-avhengighet. Den gamle `prisma/`-mappen beholdes som historikk og skal ikke migreres inn i den nye modellen.
 
-Migreringen oppretter **strukturen**. Den importerer ikke Excel-oppgavene, kobler ikke prototypen til Supabase og begynner ikke å loggføre før server/API-et tar de nye tabellene i bruk.
+Migreringene oppretter strukturen og applikasjonsfunksjonene. Excel-import utføres separat med `npm run db:import`; bruk `npm run db:import -- --dry-run` for validering uten skriving. Importen hopper over uendrede oppgaver og oppretter nye versjoner ved endringer. Alle 1 550 oppgavene er importert under omskrivingen. Applikasjonens API implementerer nå loggingen; den selvstendige mappen `prototype/` er fortsatt en lokal referanse.
 
 Offisiell dokumentasjon: [migreringer](https://supabase.com/docs/guides/local-development/database-migrations), [CLI db push](https://supabase.com/docs/reference/cli/supabase-db-push), [GitHub og miljøer](https://supabase.com/docs/guides/deployment/managing-environments), [tilgangsregler](https://supabase.com/docs/guides/database/postgres/row-level-security).
