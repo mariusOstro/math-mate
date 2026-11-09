@@ -1,6 +1,6 @@
 name: lighthouse.ci
 
-on: 
+on:
   pull_request:
   push:
     branches:
@@ -8,11 +8,6 @@ on:
 
 env:
   LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-  NEXT_AUTH_GITHUB_ID: ${{ secrets.NEXT_AUTH_GITHUB_ID }}
-  NEXT_AUTH_GITHUB_SECRET: ${{ secrets.NEXT_AUTH_GITHUB_SECRET }}
-  NEXT_AUTH_GOOGLE_ID: ${{ secrets.NEXT_AUTH_GOOGLE_ID }}
-  NEXT_AUTH_GOOGLE_SECRET: ${{ secrets.NEXT_AUTH_GOOGLE_SECRET }}
-  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
 
 jobs:
   lighthouseci:

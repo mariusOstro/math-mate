@@ -6,3 +6,8 @@ node_modules
 .git
 MATH-500
 *.md
+.env
+.env.*
+prototype
+supabase/.temp
+prisma

@@ -1,4 +1,4 @@
-name: Lint
+name: Application checks
 
 on:
   push: # runs on every commit to any branch
@@ -15,3 +15,5 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
+      - run: npm test
+      - run: npm run build
