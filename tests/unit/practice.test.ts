@@ -45,12 +45,10 @@ function setup() {
       .mockResolvedValue([
         { role: 'user', content: 'Et lite hint?', status: 'completed' },
       ]),
-    message: vi
-      .fn()
-      .mockResolvedValue({
-        status: 'completed',
-        content: 'Prøv å dele på seks.',
-      }),
+    message: vi.fn().mockResolvedValue({
+      status: 'completed',
+      content: 'Prøv å dele på seks.',
+    }),
     context: vi
       .fn()
       .mockResolvedValue({ answerRevealed: false, stepsOpened: [] }),
@@ -58,16 +56,14 @@ function setup() {
     endSession: vi.fn().mockResolvedValue(undefined),
   } satisfies IPracticeRepository;
   const tutor = {
-    reply: vi
-      .fn()
-      .mockResolvedValue({
-        content: 'Prøv å dele på seks.',
-        model: 'gpt-4o-test',
-        inputTokens: 10,
-        outputTokens: 5,
-        latencyMs: 100,
-        requestId: 'test-request',
-      }),
+    reply: vi.fn().mockResolvedValue({
+      content: 'Prøv å dele på seks.',
+      model: 'gpt-4o-test',
+      inputTokens: 10,
+      outputTokens: 5,
+      latencyMs: 100,
+      requestId: 'test-request',
+    }),
   };
   return { repo, tutor, useCases: new PracticeUseCases(repo, tutor, settings) };
 }
