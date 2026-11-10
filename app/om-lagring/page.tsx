@@ -24,8 +24,8 @@ export default async function StorageInformation() {
           <>
             <p className="user-reference-value">{userNumber}</p>
             <p>
-              Ønsker du å få dataene dine slettet, kan du kontakte den som
-              drifter MathMate og oppgi brukernummer{' '}
+              Ønsker du å få dataene dine slettet, kan du kontakte meg på 
+              marius.w.ostro@gmail.com og oppgi brukernummer{' '}
               <strong>{userNumber}</strong>. Da kan nettleserprofilen og
               tilhørende aktivitet, svar og samtaler finnes igjen.
             </p>
@@ -52,21 +52,14 @@ export default async function StorageInformation() {
         localStorage. En signert, nødvendig nettlesercookie hindrer at andre får
         tilgang til data bare ved å kjenne denne ID-en. Bruker-ID-en
         identifiserer en nettleserprofil og er ikke en bekreftet
-        personidentitet. Ved delt nettleserprofil kan flere personer få samme
-        ID.
+        personidentitet.
       </p>
       <p>
-        Data lagres i Supabase. Når du bruker chatten, sendes den aktuelle
-        oppgaven og relevant samtalehistorikk til OpenAI. Unngå å skrive navn,
-        kontaktopplysninger eller andre personopplysninger i svarfeltet eller
-        chatten.
+        Ikke oppgi navn eller annen personlig informasjon i meldinger til AI-veilederen.
+        Chatter blir lagret digitalt. All lagret chat-historikk vil slettes
+        ved prosjektets slutt, mot slutten av Januar 2027.
       </p>
-      <p>
-        Ved en kortvarig tilkoblingsfeil mellomlagres ventende handlinger i
-        nettleseren og sendes på nytt. Mellomlagrede handlinger fjernes etter
-        bekreftet levering. Automatisk sletting av serverloggene er foreløpig
-        ikke aktivert.
-      </p>
+     
       <Link className="button primary" href="/">
         Tilbake til MathMate
       </Link>
