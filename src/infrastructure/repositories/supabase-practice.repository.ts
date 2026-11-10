@@ -56,6 +56,12 @@ const ERRORS: Record<string, [number, string]> = {
 function databaseError(
   error: { code?: string; message?: string } | null,
 ): never {
+  if (error?.code === '2200H')
+    throw new ApplicationError(
+      'user_number_capacity',
+      'Det er ikke flere ledige brukernumre. Kontakt den som drifter MathMate.',
+      503,
+    );
   const known = error?.message ? ERRORS[error.message] : undefined;
   if (known) throw new ApplicationError(error!.message!, known[1], known[0]);
   console.error('Supabase operation failed', {
@@ -93,6 +99,21 @@ export class SupabasePracticeRepository implements IPracticeRepository {
       'Kunne ikke opprette nettleserprofilen.',
       503,
     );
+  }
+  async profileNumber(userId: string): Promise<number> {
+    const { data, error } = await this.db
+      .from('app_users')
+      .select('user_number')
+      .eq('id', userId)
+      .maybeSingle();
+    if (error) databaseError(error);
+    if (!data)
+      throw new ApplicationError(
+        'browser_not_found',
+        'Fant ikke nettleserprofilen. Last siden på nytt.',
+        401,
+      );
+    return data.user_number as number;
   }
   async levels(): Promise<Level[]> {
     const { data, error } = await this.db.rpc('mathmate_level_counts');

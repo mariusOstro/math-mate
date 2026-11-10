@@ -67,6 +67,7 @@ export class PracticeUseCases {
     });
     return {
       userId,
+      userNumber: await this.repo.profileNumber(userId),
       ...session,
       levels: await this.repo.levels(),
       chatEnabled: this.settings.chatEnabled,
@@ -75,6 +76,9 @@ export class PracticeUseCases {
   }
   problems(level: string, offset: number, limit: number) {
     return this.repo.problems(level, offset, limit);
+  }
+  browserNumber(verifiedBrowserId: string) {
+    return this.repo.profileNumber(verifiedBrowserId);
   }
 
   async startAttempt(

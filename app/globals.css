@@ -1479,3 +1479,73 @@
     }
   }
 }
+
+@layer components {
+  .user-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 11px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 11px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .user-number:hover {
+    border-color: var(--accent);
+  }
+  .user-number strong {
+    color: var(--accent);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .user-number-short {
+    display: none;
+  }
+  .user-reference {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 0 0 28px;
+  }
+  .user-reference h2 {
+    font-size: 17px;
+    margin-bottom: 15px;
+  }
+  .user-reference .user-reference-value {
+    color: var(--accent);
+    font-size: 36px;
+    line-height: 1.2;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .user-reference p:last-child {
+    margin-bottom: 0;
+    font-size: 13px;
+  }
+}
+@layer responsive {
+  @media (max-width: 760px) {
+    .header-actions {
+      gap: 10px;
+    }
+    .header-actions .prototype-label {
+      display: none;
+    }
+    .user-number {
+      padding: 7px 8px;
+      font-size: 10px;
+      gap: 6px;
+    }
+    .user-number-label {
+      display: none;
+    }
+    .user-number-short {
+      display: inline;
+    }
+  }
+}

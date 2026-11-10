@@ -32,6 +32,7 @@ function setup() {
   const repo = {
     profileExists: vi.fn().mockResolvedValue(true),
     registerProfile: vi.fn().mockResolvedValue(randomUUID()),
+    profileNumber: vi.fn().mockResolvedValue(1010),
     levels: vi.fn().mockResolvedValue([]),
     problems: vi.fn().mockResolvedValue({ problems: [], total: 0 }),
     problem: vi.fn().mockResolvedValue(problem),
@@ -144,7 +145,7 @@ it('renews an idle session while preserving the verified browser identity', asyn
   const { repo, useCases } = setup();
   const userId = randomUUID();
   const oldSessionId = randomUUID();
-  await useCases.bootstrap({
+  const result = await useCases.bootstrap({
     id: randomUUID(),
     browserId: userId,
     verifiedBrowserId: userId,
@@ -154,6 +155,23 @@ it('renews an idle session while preserving the verified browser identity', asyn
   expect(repo.registerProfile).not.toHaveBeenCalled();
   expect(repo.endSession).toHaveBeenCalledWith(userId, oldSessionId);
   expect(repo.command.mock.calls[0][1].sessionId).not.toBe(oldSessionId);
+  expect(result.userNumber).toBe(1010);
+  expect(repo.profileNumber).toHaveBeenCalledWith(userId);
+});
+
+it('returns the stored support number for the verified profile, ignoring a client-chosen browser id', async () => {
+  const { repo, useCases } = setup();
+  const verifiedId = randomUUID();
+  repo.profileNumber.mockResolvedValue(1011);
+  const result = await useCases.bootstrap({
+    id: randomUUID(),
+    browserId: randomUUID(),
+    verifiedBrowserId: verifiedId,
+  });
+  expect(result.userId).toBe(verifiedId);
+  expect(result.userNumber).toBe(1011);
+  expect(repo.profileNumber).toHaveBeenCalledWith(verifiedId);
+  expect(repo.registerProfile).not.toHaveBeenCalled();
 });
 
 it('persists a pending chat turn before generating, and stores provider metadata afterward', async () => {

@@ -14,6 +14,7 @@ import { ApiError, BrowserApi, type SyncStatus } from '../services/browser-api';
 
 interface Bootstrap {
   userId: string;
+  userNumber: number;
   sessionId: string;
   levels: Level[];
   chatEnabled: boolean;
