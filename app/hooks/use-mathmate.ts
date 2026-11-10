@@ -94,6 +94,7 @@ export function useMathMate() {
   const [error, setError] = useState('');
   const [working, setWorking] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState('');
+  const [levelNotice, setLevelNotice] = useState('');
   const [problems, setProblems] = useState<Problem[]>([]);
   const [index, setIndex] = useState(0);
   const [exercise, setExercise] = useState<Exercise | null>(null);
@@ -441,17 +442,36 @@ export function useMathMate() {
     if (!selectedLevel || !api.current || working || renewing.current) return;
     setWorking(true);
     setError('');
+    setLevelNotice('');
     try {
       await api.current.record('level_selected', { level: selectedLevel });
       await api.current.flush();
-      const result = await BrowserApi.request<{
-        problems: Problem[];
-        total: number;
-      }>(`problems?level=${encodeURIComponent(selectedLevel)}&limit=150`);
-      if (!result.problems.length)
-        throw new Error('Dette nivået har ingen tilgjengelige oppgaver ennå.');
-      setProblems(result.problems);
-      await openProblem(0, result.problems);
+      const loaded: Problem[] = [];
+      let offset = 0;
+      let total: number;
+      do {
+        const result = await BrowserApi.request<{
+          problems: Problem[];
+          total: number;
+        }>(
+          `problems?level=${encodeURIComponent(selectedLevel)}&limit=150&offset=${offset}`,
+        );
+        loaded.push(...result.problems);
+        offset += result.problems.length;
+        total = result.total;
+        if (!result.problems.length) break;
+      } while (offset < total);
+      const unique = [
+        ...new Map(loaded.map((problem) => [problem.id, problem])).values(),
+      ];
+      if (!unique.length) {
+        setLevelNotice(
+          'Du har allerede prøvd alle tilgjengelige oppgaver på dette nivået. Velg et annet trinn eller fag for å øve videre.',
+        );
+        return;
+      }
+      setProblems(unique);
+      await openProblem(0, unique);
     } catch (error) {
       failure(error);
     } finally {
@@ -468,6 +488,7 @@ export function useMathMate() {
       setExercise(null);
       setProblems([]);
       setSelectedLevel('');
+      setLevelNotice('');
     } catch (error) {
       failure(error);
     } finally {
@@ -758,8 +779,10 @@ export function useMathMate() {
     working,
     bootstrap,
     selectedLevel,
+    levelNotice,
     setSelectedLevel: (level: string) => {
       setSelectedLevel(level);
+      setLevelNotice('');
       void api.current?.record('level_selected', { level, stage: 'selection' });
     },
     problems,

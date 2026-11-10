@@ -14,6 +14,7 @@ export interface IPracticeRepository {
   profileNumber(userId: string): Promise<number>;
   levels(): Promise<Level[]>;
   problems(
+    userId: string,
     level: string,
     offset: number,
     limit: number,

@@ -124,7 +124,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const controller = new PracticeController(getPracticeUseCases());
     if (path === 'problems')
       return NextResponse.json(
-        await controller.problems(request.nextUrl.searchParams),
+        await controller.problems(userId, request.nextUrl.searchParams),
         { headers: responseHeaders },
       );
     if (path === 'chat')

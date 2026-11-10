@@ -57,7 +57,7 @@ export class PracticeController {
       .parse(body);
     return this.useCases.bootstrap({ ...input, verifiedBrowserId });
   }
-  problems(search: URLSearchParams) {
+  problems(userId: string, search: URLSearchParams) {
     const input = z
       .object({
         level: z.enum(LEVEL_CODES),
@@ -65,7 +65,12 @@ export class PracticeController {
         limit: z.coerce.number().int().min(1).max(150).default(150),
       })
       .parse(Object.fromEntries(search));
-    return this.useCases.problems(input.level, input.offset, input.limit);
+    return this.useCases.problems(
+      userId,
+      input.level,
+      input.offset,
+      input.limit,
+    );
   }
   action(path: string, userId: string, body: unknown) {
     switch (path) {
