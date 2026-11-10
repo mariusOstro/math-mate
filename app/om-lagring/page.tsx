@@ -24,7 +24,7 @@ export default async function StorageInformation() {
           <>
             <p className="user-reference-value">{userNumber}</p>
             <p>
-              Ønsker du å få dataene dine slettet, kan du kontakte meg på 
+              Ønsker du å få dataene dine slettet, kan du kontakte meg på
               marius.w.ostro@gmail.com og oppgi brukernummer{' '}
               <strong>{userNumber}</strong>. Da kan nettleserprofilen og
               tilhørende aktivitet, svar og samtaler finnes igjen.
@@ -55,11 +55,11 @@ export default async function StorageInformation() {
         personidentitet.
       </p>
       <p>
-        Ikke oppgi navn eller annen personlig informasjon i meldinger til AI-veilederen.
-        Chatter blir lagret digitalt. All lagret chat-historikk vil slettes
-        ved prosjektets slutt, mot slutten av Januar 2027.
+        Ikke oppgi navn eller annen personlig informasjon i meldinger til
+        AI-veilederen. Chatter blir lagret digitalt. All lagret chat-historikk
+        vil slettes ved prosjektets slutt, mot slutten av Januar 2027.
       </p>
-     
+
       <Link className="button primary" href="/">
         Tilbake til MathMate
       </Link>
