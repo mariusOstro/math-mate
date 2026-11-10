@@ -114,6 +114,22 @@ it('does not let a client choose its answer correctness', () => {
   ).toThrow();
 });
 
+it('lists unattempted problems for the verified caller rather than a user id from query parameters', async () => {
+  const { repo, useCases } = setup();
+  const userId = randomUUID();
+  const controller = new PracticeController(useCases);
+  await controller.problems(
+    userId,
+    new URLSearchParams({
+      level: '4',
+      offset: '150',
+      limit: '150',
+      userId: randomUUID(),
+    }),
+  );
+  expect(repo.problems).toHaveBeenCalledWith(userId, '4', 150, 150);
+});
+
 it('does not adopt an unverified browser profile or session as an existing identity', async () => {
   const { repo, useCases } = setup();
   const requestedSession = randomUUID();

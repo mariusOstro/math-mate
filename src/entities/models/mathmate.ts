@@ -34,6 +34,8 @@ export const displayAnswer = (answer: string) =>
 
 export interface Problem {
   id: string;
+  /** Stable position in the active level catalog, before personal filtering. */
+  position?: number;
   source_id: string;
   version: number;
   question: string;

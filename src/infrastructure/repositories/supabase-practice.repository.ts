@@ -14,8 +14,6 @@ import {
   type SolutionStep,
 } from '@/entities/models/mathmate';
 
-const PUBLIC_PROBLEM_FIELDS =
-  'id,source_id,version,question,level_code,difficulty,category,answer_unit';
 const ERRORS: Record<string, [number, string]> = {
   session_not_found: [404, 'Fant ikke økten. Last siden på nytt.'],
   session_expired: [
@@ -125,16 +123,15 @@ export class SupabasePracticeRepository implements IPracticeRepository {
       count: Number(counts.find((row) => row.level_code === id)?.count ?? 0),
     })).filter((level) => level.count > 0);
   }
-  async problems(level: string, offset: number, limit: number) {
-    const { data, count, error } = await this.db
-      .from('problems')
-      .select(PUBLIC_PROBLEM_FIELDS, { count: 'exact' })
-      .eq('level_code', level)
-      .eq('is_active', true)
-      .order('source_id')
-      .range(offset, offset + limit - 1);
+  async problems(userId: string, level: string, offset: number, limit: number) {
+    const { data, error } = await this.db.rpc('mathmate_unattempted_problems', {
+      p_user_id: userId,
+      p_level: level,
+      p_offset: offset,
+      p_limit: limit,
+    });
     if (error) databaseError(error);
-    return { problems: data as Problem[], total: count ?? 0 };
+    return data as { problems: Problem[]; total: number };
   }
   async problem(id: string): Promise<FullProblem> {
     const { data, error } = await this.db

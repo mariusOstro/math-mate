@@ -1,5 +1,7 @@
 # MathMate
 
+Oppgavelisten er personlig: Når du velger et trinn eller fag, hopper den over alle oppgaver denne nettleserprofilen har åpnet tidligere, på tvers av økter. Rekkefølgen og de opprinnelige oppgavenumrene beholdes. Åpning teller som et forsøk, også uten innsendt svar. Du kan fortsatt gå tilbake til oppgaver i den åpne listen. Når alle er prøvd, vises en beskjed uten å starte på nytt. Historikken ligger i Supabase og bruker eksisterende forsøk, også fra før denne funksjonen ble innført. Samme oppgave skjules også etter import av en ny versjon med samme `source_id`.
+
 Norwegian mathematics practice with the prototype's interface, a Supabase question bank, server-checked answers, step-by-step guidance and an OpenAI tutor. The main application is a Next.js App Router application suitable for Vercel. The original local prototype remains in `prototype/` as a separate reference.
 
 ## Run locally

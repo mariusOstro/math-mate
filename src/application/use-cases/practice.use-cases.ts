@@ -74,8 +74,8 @@ export class PracticeUseCases {
       appVersion: this.settings.appVersion,
     };
   }
-  problems(level: string, offset: number, limit: number) {
-    return this.repo.problems(level, offset, limit);
+  problems(userId: string, level: string, offset: number, limit: number) {
+    return this.repo.problems(userId, level, offset, limit);
   }
   browserNumber(verifiedBrowserId: string) {
     return this.repo.profileNumber(verifiedBrowserId);

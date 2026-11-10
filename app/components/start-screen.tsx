@@ -46,7 +46,10 @@ export function StartScreen({ state }: { state: MathMateState }) {
           01 <span>FINN DITT NIVÅ</span>
         </span>
         <h2 id="selection-title">Hva vil du øve på?</h2>
-        <p className="muted">Velg klassetrinn eller matematikkfag.</p>
+        <p className="muted">
+          Velg klassetrinn eller matematikkfag. Du fortsetter med neste oppgave
+          du ikke har prøvd.
+        </p>
         {groups.map(([label, codes]) => (
           <fieldset key={label} disabled={state.working}>
             <legend>{label}</legend>
@@ -79,7 +82,7 @@ export function StartScreen({ state }: { state: MathMateState }) {
         <div className="selection-bottom">
           <p aria-live="polite">
             {level
-              ? `${level.label} · ${level.count} oppgaver klare til deg`
+              ? `${level.label} · ${level.count} oppgaver i oppgavebanken`
               : 'Velg et nivå for å komme i gang.'}
           </p>
           <button
@@ -91,6 +94,11 @@ export function StartScreen({ state }: { state: MathMateState }) {
             <ArrowRight className="icon" />
           </button>
         </div>
+        {state.levelNotice && (
+          <p className="configuration-note" role="status">
+            {state.levelNotice}
+          </p>
+        )}
       </section>
     </main>
   );

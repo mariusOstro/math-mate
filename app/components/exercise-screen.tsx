@@ -110,10 +110,14 @@ export function ExerciseScreen({ state }: { state: MathMateState }) {
   const exercise = state.exercise!;
   const problem = state.problems[state.index];
   const title = useRef<HTMLHeadingElement>(null);
+  const position = problem.position ?? state.index + 1;
+  const total =
+    state.bootstrap?.levels.find((level) => level.id === problem.level_code)
+      ?.count ?? state.problems.length;
   useEffect(() => {
     title.current?.focus();
-    document.title = `${levelLabel(problem.level_code)} – oppgave ${state.index + 1} | MathMate`;
-  }, [problem.id, problem.level_code, state.index]);
+    document.title = `${levelLabel(problem.level_code)} – oppgave ${position} | MathMate`;
+  }, [problem.id, problem.level_code, position]);
   return (
     <main id="main" className="practice-page" tabIndex={-1}>
       <div className="practice-top">
@@ -143,11 +147,11 @@ export function ExerciseScreen({ state }: { state: MathMateState }) {
                 onClick={() => void state.navigate(index)}
               >
                 <span className="problem-number">
-                  {String(index + 1).padStart(2, '0')}
+                  {String(item.position ?? index + 1).padStart(2, '0')}
                 </span>
                 <span>
                   {categoryLabel(item.category)}
-                  <small>Oppgave {index + 1}</small>
+                  <small>Oppgave {item.position ?? index + 1}</small>
                 </span>
                 {index === state.index && <ChevronRight className="icon" />}
               </button>
@@ -166,7 +170,7 @@ export function ExerciseScreen({ state }: { state: MathMateState }) {
           <article className="problem-card">
             <div className="problem-meta">
               <span className="eyebrow">
-                OPPGAVE {state.index + 1} AV {state.problems.length}
+                OPPGAVE {position} AV {total}
               </span>
               <span className="difficulty">Nivå {problem.difficulty}</span>
             </div>
@@ -284,17 +288,19 @@ export function ExerciseScreen({ state }: { state: MathMateState }) {
               <ArrowLeft className="icon" /> Forrige
             </button>
             <span>
-              {state.index + 1} / {state.problems.length}
+              {position} / {total}
             </span>
             <button
               className="button secondary"
               disabled={state.working}
               onClick={() =>
-                void state.navigate((state.index + 1) % state.problems.length)
+                void (state.index === state.problems.length - 1
+                  ? state.home()
+                  : state.navigate(state.index + 1))
               }
             >
               {state.index === state.problems.length - 1
-                ? 'Til første oppgave'
+                ? 'Velg nytt nivå'
                 : 'Neste oppgave'}{' '}
               <ArrowRight className="icon" />
             </button>

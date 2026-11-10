@@ -71,6 +71,28 @@ async function main() {
     return;
   }
   console.log('User-number migration: available. Profiles:', profileCount);
+  const { data: queue, error: queueError } = await db.rpc(
+    'mathmate_unattempted_problems',
+    {
+      p_user_id: '00000000-0000-4000-8000-000000000000',
+      p_level: '4',
+      p_offset: 0,
+      p_limit: 1,
+    },
+  );
+  if (
+    queueError ||
+    !Array.isArray(queue?.problems) ||
+    typeof queue?.total !== 'number'
+  ) {
+    console.error(
+      'Personal-queue migration is not accessible:',
+      queueError?.code ?? 'invalid_response',
+    );
+    process.exitCode = 1;
+    return;
+  }
+  console.log('Personal-queue migration: available.');
   const { error: rpcError } = await db.rpc('mathmate_level_counts');
   console.log(
     'Application command migration:',
